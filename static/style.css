@@ -38,8 +38,9 @@ header h1 {
     font-size: 2.5rem;
     font-weight: 800;
     letter-spacing: -0.025em;
-    background: linear-gradient(to right, var(--primary), #a855f7);
-    -webkit-background-clip: text;
+    background: linear-gradient(to right, #6366f1, #a855f7);
+    -webkit-background-clip: text; /* Versão para Chrome/Safari */
+    background-clip: text;         /* Versão oficial padrão */
     -webkit-text-fill-color: transparent;
     margin-bottom: 10px;
 }
