@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card-form">
+    <form method="POST">
+        <div class="form-group">
+            <label>Título da Atividade</label>
+            <input type="text" name="titulo-atividade" 
+                   placeholder="Ex: The Last of Us, Inception..." required 
+                   value="{{ atividade_selecionada.titulo_atividade if atividade_selecionada else '' }}">
+        </div>
+
+        <div style="display: flex; gap: 16px;">
+            <div class="form-group" style="flex: 1;">
+                <label>Tipo de Mídia</label>
+                <select name="tipo_de_atividade" required>
+                    <option value="" disabled {% if not atividade_selecionada %}selected{% endif %}>Selecione...</option>
+                    <option value="Jogo" {% if atividade_selecionada and atividade_selecionada.tipo_de_atividade == 'Jogo' %}selected{% endif %}>Jogo</option>
+                    <option value="Filme" {% if atividade_selecionada and atividade_selecionada.tipo_de_atividade == 'Filme' %}selected{% endif %}>Filme</option>
+                    <option value="Série" {% if atividade_selecionada and atividade_selecionada.tipo_de_atividade == 'Série' %}selected{% endif %}>Série</option>
+                    <option value="Livro" {% if atividade_selecionada and atividade_selecionada.tipo_de_atividade == 'Livro' %}selected{% endif %}>Livro</option>
+                </select>
+            </div>
+
+            <div class="form-group" style="flex: 1;">
+                <label>Quem indicou?</label>
+                <input type="text" name="indicado_por" 
+                       placeholder="Amigo, Site, etc." 
+                       value="{{ atividade_selecionada.indicado_por if atividade_selecionada else '' }}">
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button type="submit">{{ 'Atualizar Item' if atividade_selecionada else 'Adicionar à Lista' }}</button>
+            {% if atividade_selecionada %}
+                <a href="{{ url_for('atividade') }}" class="btn-cancel">Cancelar</a>
+            {% endif %}
+        </div>
+    </form>
+</div>
+
+<h2 style="margin-bottom: 24px; font-weight: 800;">Meu Catálogo</h2>
+
+<div class="grid-obras">
+    {% for atividade in atividades %}
+    <div class="obra-card">
+        <div>
+            <span class="tag">{{ atividade.tipo_de_atividade }}</span>
+            <h3>{{ atividade.titulo_atividade }}</h3>
+            
+            {% if atividade.indicado_por %}
+                <p class="indicado-por">Recomendado por: <strong>{{ atividade.indicado_por }}</strong></p>
+            {% endif %}
+        </div>
+
+        <div class="actions">
+            <a href="{{ url_for('update', idAtividade=atividade.id_atividade) }}" class="btn-action edit">Editar</a>
+            <a href="{{ url_for('delete', idAtividade=atividade.id_atividade) }}" class="btn-action delete">Apagar</a>
+        </div>
+    </div>
+    {% else %}
+    <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #94a3b8;">
+        <p>Sua lista está vazia. Comece adicionando algo acima!</p>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
